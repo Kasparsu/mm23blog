@@ -13,7 +13,7 @@ class PublicController extends Controller
         return view('welcome', compact('posts'));
     }
 
-    public function post(Post $post){
+    public function post(Post $post) {
         return view('post', compact('post'));
     }
 
