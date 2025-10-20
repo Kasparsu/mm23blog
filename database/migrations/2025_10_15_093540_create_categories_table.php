@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignIdFor(Category::class)->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
+        Schema::table('posts', function (Blueprint $table) {
+            $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
+        });
     }
 
     /**
@@ -25,6 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropConstrainedForeignIdFor(Category::class);
+        });
         Schema::dropIfExists('categories');
     }
 };
