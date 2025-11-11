@@ -17,7 +17,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->paginate();
+        $posts = Post::latest()->with(['images', 'user'])->paginate();
+        if(request()->wantsJson()) {
+            return $posts;
+        }
         return view('posts.index', compact('posts'));
     }
 
@@ -37,7 +40,13 @@ class PostController extends Controller
 
         $post = new Post($request->validated());
         //$post->user_id = Auth::user()->id;
-        $post->user()->associate(Auth::user());
+        $post->category()->associate(1);
+        if($request->wantsJson()){
+            $post->user()->associate(1);
+        } else {
+            $post->user()->associate(Auth::user());
+        }
+
         $post->save();
         if($request->file('images')) {
             foreach($request->file('images') as $uploadedFile) {
@@ -46,6 +55,9 @@ class PostController extends Controller
                 $image->post()->associate($post);
                 $image->save();
             }
+        }
+        if($request->wantsJson()) {
+            return $post;
         }
         return redirect()->route('posts.index');
     }
@@ -77,6 +89,9 @@ class PostController extends Controller
         // $post->fill($request->validated());
         // $post->save();
         $post->update($request->validated());
+        if($request->wantsJson()){
+            return $post;
+        }
         return redirect()->route('posts.index');
     }
 
@@ -86,6 +101,9 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
+        if(request()->wantsJson()){
+            return $post;
+        }
         return redirect()->route('posts.index');
     }
 }

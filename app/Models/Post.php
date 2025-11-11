@@ -15,6 +15,7 @@ class Post extends Model
     use HasFactory, HasSlug;
 
     protected $fillable = ['title', 'body'];
+    protected $appends = ['snippet'];
 
     public function getSlugOptions(): SlugOptions {
         return SlugOptions::create()->generateSlugsFrom('title')->saveSlugsTo('slug');
