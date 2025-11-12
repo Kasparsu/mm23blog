@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectUsersTo('/');
         $middleware->statefulApi();
-          $middleware->api(prepend: [
+        $middleware->api(prepend: [
             StartSession::class,
             ShareErrorsFromSession::class,
             HandleCors::class,
